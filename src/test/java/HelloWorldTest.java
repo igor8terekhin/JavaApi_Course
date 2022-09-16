@@ -9,7 +9,7 @@ public class HelloWorldTest {
         Response response = RestAssured
                 .get("https://playground.learnqa.ru/api/hello")
                 .andReturn();
-
+//comment for commit test
         response.prettyPrint();
     }
 }
