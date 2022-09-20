@@ -4,7 +4,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,7 +45,6 @@ public class Task2ex9 {
     }
 
     public List<String> getPasswords() throws IOException {
-        String fileLocation = "src/test/resources/passwords.txt";
         String url = "https://en.wikipedia.org/wiki/List_of_the_most_common_passwords";
         Document doc = Jsoup.connect(url).get();
 
@@ -55,18 +53,10 @@ public class Task2ex9 {
                 .text()
                 .replaceAll("\\[a\\]", "");
 
-        List<String> textArr = Arrays
+        return Arrays
                 .stream(text.split(" "))
                 .distinct()
                 .collect(Collectors.toList());
 
-
-        FileWriter fw = new FileWriter(fileLocation);
-        for (String s : textArr) {
-            fw.write(s + "\n");
-        }
-        fw.close();
-
-        return textArr;
     }
 }
