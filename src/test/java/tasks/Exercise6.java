@@ -1,8 +1,10 @@
+package tasks;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
-public class Task2ex6 {
+public class Exercise6 {
 
     @Test
     public void redirect() {

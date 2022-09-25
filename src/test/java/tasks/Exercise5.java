@@ -1,8 +1,10 @@
+package tasks;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Test;
 
-public class Task2ex5 {
+public class Exercise5 {
 
     @Test
     public void jsonParsing() {

@@ -1,8 +1,10 @@
+package tasks;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
-public class Task2ex7 {
+public class Exercise7 {
     @Test
     public void getAllRedirectLocations() {
         int statusCode = 0;

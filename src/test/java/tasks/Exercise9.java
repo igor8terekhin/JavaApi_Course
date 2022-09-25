@@ -1,3 +1,5 @@
+package tasks;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.jsoup.Jsoup;
@@ -8,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Task2ex9 {
+public class Exercise9 {
 
     @Test
     public void bruteForce() throws IOException {

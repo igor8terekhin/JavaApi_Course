@@ -1,3 +1,5 @@
+package tasks;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -6,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Task2ex8 {
+public class Exercise8 {
     @Test
     public void checkToken() throws InterruptedException {
         String url = "https://playground.learnqa.ru/ajax/api/longtime_job";

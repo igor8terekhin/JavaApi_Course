@@ -1,6 +1,8 @@
+package tasks;
+
 import org.junit.jupiter.api.Test;
 
-public class Task1ex3 {
+public class Exercise3 {
 
     @Test
     public void greetingsFromMe() {

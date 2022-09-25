@@ -1,8 +1,10 @@
+package tasks;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
-public class Task1ex4 {
+public class Exercise4 {
 
     @Test
     public void sendGetRequest() {
