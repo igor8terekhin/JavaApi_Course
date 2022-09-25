@@ -20,6 +20,6 @@ public class Exercise11 extends BaseTestCase {
         String cookie = this.getCookie(response, "HomeWork");
         String expectedCookie = "hw_value";
 
-        assertEquals(expectedCookie, cookie, "Such cookie value isn't expected!");
+        assertEquals(expectedCookie, cookie, "Such cookie value is unexpected!");
     }
 }
