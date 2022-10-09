@@ -27,4 +27,8 @@ public class Assertions {
                 "Response text doesn't match expected text"
         );
     }
+
+    public static void assertJsonHasKey(Response response, String expectedFieldName) {
+        response.then().assertThat().body("$", hasKey(expectedFieldName));
+    }
 }
