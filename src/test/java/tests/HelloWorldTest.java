@@ -15,8 +15,6 @@ public class HelloWorldTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "John", "Paul"})
-
-    @Test
     public void testHelloMethodWithoutName(String name) {
         Map<String, String> queryParams = new HashMap<>();
 
