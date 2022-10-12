@@ -1,9 +1,7 @@
 package lib;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DataGenerator {
 
@@ -39,5 +37,18 @@ public class DataGenerator {
             }
         }
         return userData;
+    }
+
+    public static String generateRandomString(int length) {
+
+        int begin = 97;
+        int end = 122;
+
+        Random rnd = new Random();
+
+        return rnd.ints(begin, end + 1)
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }
