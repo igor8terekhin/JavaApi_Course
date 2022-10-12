@@ -43,7 +43,7 @@ public class UserAuthTest extends BaseTestCase {
     }
 
     @Test
-    @Description("Test successfully authorize user using email and password")
+    @Description("Test successfully authorizes user using email and password")
     @DisplayName("Test user with positive auth")
     public void testAuthUser() {
         String url = "https://playground.learnqa.ru/api/user/auth";
