@@ -9,8 +9,12 @@ import lib.BaseTestCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GetUserTest extends BaseTestCase {
     final String getUserUrl = "https://playground.learnqa.ru/api/user/";
@@ -71,5 +75,41 @@ public class GetUserTest extends BaseTestCase {
         String[] unexpectedFields = {"id", "email", "firstName", "lastName"};
 
         Assertions.assertJsonHasNotFields(responseUserData, unexpectedFields);
+    }
+
+    @Test
+    public void getUserIds() throws IOException {
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", "vinkotov@example.com");
+        authData.put("password", "1234");
+
+        Response responseGetAuth = apiCoreRequests.makePostRequest(loginUrl, authData);
+
+        String header = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
+
+        FileWriter fw = new FileWriter("src/test/resources/test.txt");
+        fw.write("begin");
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        Runnable runnableTask = () -> {
+            for (int i = 0; i < 10; i++) {
+//                Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + i, header, cookie);
+//                try {
+//                    fw.write("id " + i + ": " + responseUserData.asString());
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+                try {
+                    fw.write("s" + i);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        executor.execute(runnableTask);
+        executor.shutdown();
+        fw.close();
     }
 }
