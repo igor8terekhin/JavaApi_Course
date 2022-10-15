@@ -3,6 +3,7 @@ package tests;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
@@ -14,6 +15,8 @@ import java.util.Map;
 public class UserEditTest extends BaseTestCase {
     final String baseUrl = "https://playground.learnqa.ru/api/user/";
     final String url = "https://playground.learnqa.ru/api/user/login";
+
+    private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
     public void editJustCreatedTest() {
@@ -62,5 +65,16 @@ public class UserEditTest extends BaseTestCase {
                 .andReturn();
 
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
+    }
+
+    @Test
+    public void editUserWithoutAuth() {
+        String newName = "Changed name";
+        Map<String, String> editData = new HashMap<>();
+        editData.put("firstName", newName);
+
+        Response responseEditUser = apiCoreRequests.makePutRequest(baseUrl + 2, editData);
+
+        System.out.println(responseEditUser.asString());
     }
 }
