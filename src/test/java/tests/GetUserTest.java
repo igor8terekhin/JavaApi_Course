@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class GetUserTest extends BaseTestCase {
     final String getUserUrl = "https://playground.learnqa.ru/api/user/";
@@ -89,27 +90,33 @@ public class GetUserTest extends BaseTestCase {
         String cookie = this.getCookie(responseGetAuth, "auth_sid");
 
         FileWriter fw = new FileWriter("src/test/resources/test.txt");
-        fw.write("begin");
-        ExecutorService executor = Executors.newFixedThreadPool(10);
 
-        Runnable runnableTask = () -> {
-            for (int i = 0; i < 10; i++) {
-//                Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + i, header, cookie);
-//                try {
-//                    fw.write("id " + i + ": " + responseUserData.asString());
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
+        //Creating pool thread of 1000 threads;
+        ExecutorService executor = Executors.newFixedThreadPool(1000);
+
+        //Creating and run tasks in cycle. If you create cycle inside runnable it won't be as fast as it's in current imp
+        for (int i = 1; i < 50000; i++) {
+            //Here we need separate counter because we can't use incrementer from cycle
+            int finalI = i;
+            Runnable runnable = () -> {
+                Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + finalI, header, cookie);
                 try {
-                    fw.write("s" + i);
+                    fw.write("id " + finalI + ": " + responseUserData.asString() + "\n");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            }
-        };
-
-        executor.execute(runnableTask);
+            };
+            //we submit each runnable within cycle
+            executor.submit(runnable);
+        }
+        //executor needs to be closed otherwise we will have demon tasks running in background
         executor.shutdown();
+        //before executor finish we need to wait until all tasks are done
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            System.out.println("Exception");
+        }
         fw.close();
     }
 }
