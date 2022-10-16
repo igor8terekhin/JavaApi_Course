@@ -13,20 +13,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserEditTest extends BaseTestCase {
-    final String baseUrl = "https://playground.learnqa.ru/api/user/";
-    final String url = "https://playground.learnqa.ru/api/user/login";
+    final String getUserUrl = "https://playground.learnqa.ru/api/user/";
+    final String loginUrl = "https://playground.learnqa.ru/api/user/login";
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
     public void editJustCreatedTest() {
-
         //Generate user
         Map<String, String> userData = DataGenerator.getRegistrationData();
         JsonPath responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post(baseUrl)
+                .post(getUserUrl)
                 .jsonPath();
 
         String userId = responseCreateAuth.getString("id");
@@ -37,11 +36,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("email", userData.get("email"));
         authData.put("password", userData.get("password"));
 
-        Response responseGetAuth = RestAssured
-                .given()
-                .body(authData)
-                .post(url)
-                .andReturn();
+        Response responseGetAuth = apiCoreRequests.makePostRequest(loginUrl, authData);
 
         //Edit
         String newName = "Changed name";
@@ -53,7 +48,7 @@ public class UserEditTest extends BaseTestCase {
                 .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
                 .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
                 .body(editData)
-                .put(baseUrl + userId)
+                .put(getUserUrl + userId)
                 .andReturn();
 
         //Get user and further checks
@@ -61,7 +56,7 @@ public class UserEditTest extends BaseTestCase {
                 .given()
                 .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
                 .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
-                .get(baseUrl + userId)
+                .get(getUserUrl + userId)
                 .andReturn();
 
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
@@ -69,12 +64,116 @@ public class UserEditTest extends BaseTestCase {
 
     @Test
     public void editUserWithoutAuth() {
+        //Attempt to change user's data
         String newName = "Changed name";
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
 
-        Response responseEditUser = apiCoreRequests.makePutRequest(baseUrl + 2, editData);
+        Response responseEditUser = apiCoreRequests.makePutRequest(getUserUrl + 2, editData);
 
-        System.out.println(responseEditUser.asString());
+        Assertions.assertResponseTextEquals(responseEditUser, "Auth token not supplied");
+
+        //Login as user with changed data
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", "vinkotov@example.com");
+        authData.put("password", "1234");
+
+        Response responseGetAuth = apiCoreRequests.makePostRequest(loginUrl, authData);
+
+        String header = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
+
+        //Get changed data
+        Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + 2, header, cookie);
+
+        Assertions.assertJsonByName(responseUserData, "firstName", "Vitalii");
+    }
+
+    @Test
+    public void editUserDataAsAnotherUser() {
+        //Generate user
+        Map<String, String> userData = DataGenerator.getRegistrationData();
+        JsonPath responseCreateAuth = RestAssured
+                .given()
+                .body(userData)
+                .post(getUserUrl)
+                .jsonPath();
+
+        String userId = responseCreateAuth.getString("id");
+
+        //Login
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", userData.get("email"));
+        authData.put("password", userData.get("password"));
+
+        Response responseGetAuth = apiCoreRequests.makePostRequest(loginUrl, authData);
+
+        //Edit user
+        String newName = "Changed name";
+        Map<String, String> editData = new HashMap<>();
+        editData.put("firstName", newName);
+
+        Response responseEditUser = apiCoreRequests.makePutRequest(getUserUrl + 2, editData);
+
+        Assertions.assertResponseTextEquals(responseEditUser, "Auth token not supplied");
+
+        //Login as user with changed data
+        Map<String, String> authDataUpd = new HashMap<>();
+        authDataUpd.put("email", "vinkotov@example.com");
+        authDataUpd.put("password", "1234");
+
+        Response responseGetAuthUpd = apiCoreRequests.makePostRequest(loginUrl, authDataUpd);
+
+        String header = this.getHeader(responseGetAuthUpd, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuthUpd, "auth_sid");
+
+        //Get changed data
+        Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + 2, header, cookie);
+
+        Assertions.assertJsonByName(responseUserData, "firstName", "Vitalii");
+    }
+
+    @Test
+    public void editWrongEmail() {
+        //Generate user
+        Map<String, String> userData = DataGenerator.getRegistrationData();
+        JsonPath responseCreateAuth = RestAssured
+                .given()
+                .body(userData)
+                .post(getUserUrl)
+                .jsonPath();
+
+        String userId = responseCreateAuth.getString("id");
+
+        //Login
+
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", userData.get("email"));
+        authData.put("password", userData.get("password"));
+
+        Response responseGetAuth = apiCoreRequests.makePostRequest(loginUrl, authData);
+
+        //Edit
+        String newEmail = "wrong.email.com";
+        Map<String, String> editData = new HashMap<>();
+        editData.put("email", newEmail);
+
+        Response responseEditUser = RestAssured
+                .given()
+                .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
+                .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
+                .body(editData)
+                .put(getUserUrl + userId)
+                .andReturn();
+
+        //Get user and further checks
+        Response responseUserData = RestAssured
+                .given()
+                .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
+                .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
+                .get(getUserUrl + userId)
+                .andReturn();
+
+        Assertions.assertJsonNotEqualsByName(responseUserData, "email", newEmail);
     }
 }
