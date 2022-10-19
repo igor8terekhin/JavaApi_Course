@@ -209,15 +209,25 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
 
+        String token = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
+
         Response responseEditUser = RestAssured
                 .given()
-                .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
-                .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
                 .body(editData)
                 .put(getUserUrl + userId)
                 .andReturn();
 
+        //put request is done with correct token:
+        System.out.println(responseEditUser.asString());
         Assertions.assertJsonByName(responseEditUser, "error", "Too short value for field firstName");
+
+        responseEditUser = apiCoreRequests.makePutRequestWithTokenAndCookie(getUserUrl + userId, editData, token, cookie);
+
+        //put response is done with wrong token:
+        System.out.println(responseEditUser.asString());
 
         //Get user and further checks
         Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + userId,
