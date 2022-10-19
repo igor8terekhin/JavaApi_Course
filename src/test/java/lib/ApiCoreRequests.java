@@ -62,7 +62,7 @@ public class ApiCoreRequests {
         return given()
                 .filter(new AllureRestAssured())
                 .header(new Header("x-csrf-token", token))
-                .cookie(cookie)
+                .cookie("auth_sid",cookie)
                 .body(editData)
                 .put(url)
                 .andReturn();
