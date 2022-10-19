@@ -176,4 +176,42 @@ public class UserEditTest extends BaseTestCase {
 
         Assertions.assertJsonNotEqualsByName(responseUserData, "email", newEmail);
     }
+
+    @Test
+    public void editFirstNameShortName() {
+        //Generate user
+        Map<String, String> userData = DataGenerator.getRegistrationData();
+        JsonPath responseCreateAuth = apiCoreRequests.makePostRequestAsJson(getUserUrl, userData);
+
+        String userId = responseCreateAuth.getString("id");
+
+        //Login
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", userData.get("email"));
+        authData.put("password", userData.get("password"));
+
+        Response responseGetAuth = apiCoreRequests.makePostRequest(loginUrl, authData);
+
+        //Attempt to edit
+        String newName = "s";
+        Map<String, String> editData = new HashMap<>();
+        editData.put("firstName", newName);
+
+        Response responseEditUser = RestAssured
+                .given()
+                .header("x-csrf-token", this.getHeader(responseGetAuth, "x-csrf-token"))
+                .cookie("auth_sid", this.getCookie(responseGetAuth, "auth_sid"))
+                .body(editData)
+                .put(getUserUrl + userId)
+                .andReturn();
+
+        Assertions.assertJsonByName(responseEditUser, "error", "Too short value for field firstName");
+
+        //Get user and further checks
+        Response responseUserData = apiCoreRequests.makeGetRequest(getUserUrl + userId,
+                this.getHeader(responseGetAuth, "x-csrf-token"),
+                this.getCookie(responseGetAuth, "auth_sid"));
+
+        Assertions.assertJsonByName(responseUserData, "firstName", userData.get("firstName"));
+    }
 }
