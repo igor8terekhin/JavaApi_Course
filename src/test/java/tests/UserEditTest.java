@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.Description;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -7,6 +8,7 @@ import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -19,6 +21,8 @@ public class UserEditTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Description("Test change user's first name to the provided")
+    @DisplayName("Test change first name")
     public void editJustCreatedTest() {
         //Generate user
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -63,6 +67,8 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Description("Test tires to change user's first name without authentication")
+    @DisplayName("Test change first name without auth")
     public void editUserWithoutAuth() {
         //Attempt to change user's data
         String newName = "Changed name";
@@ -90,6 +96,8 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Description("Test tries to change first name while being authed as another user")
+    @DisplayName("Test change first name with another auth")
     public void editUserDataAsAnotherUser() {
         //Generate user
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -134,6 +142,8 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Description("Test tries to change user's email to the wrong format email (without @)")
+    @DisplayName("Test change email with wrong one")
     public void editWrongEmail() {
         //Generate user
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -178,6 +188,8 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Description("Test tries change user's first name to the one character first name")
+    @DisplayName("Test first name to the short one")
     public void editFirstNameShortName() {
         //Generate user
         Map<String, String> userData = DataGenerator.getRegistrationData();
