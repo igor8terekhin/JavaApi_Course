@@ -1,15 +1,16 @@
 # REST API test automation with Java course
 ## About
 This repository presents my resulting project for REST API test automation with Java course by https://software-testing.ru/.
-It runs tests for training sandbox located at https://playground.learnqa.ru/api/. Tests are run by Docker and resulting test report is provided by Allure.
+It runs tests for training sandbox located at https://playground.learnqa.ru/api/. Tests are run using RestAssured framework, launched in Docker container and resulting test report is provided by Allure.
 
 Methods map: https://playground.learnqa.ru/api/map
 
-Stack used for this course:
+Stack used in this course:
 
 * Java
 * Maven
 * JUnit 5
+* RestAssured
 * Allure
 * Docker
 
@@ -22,21 +23,19 @@ _Pre-requisites_
 Clone repository from GitHub to your local folder:
 
 ```
-mkdir ~/JavaApiCourse
-cd ~/JavaApiCourse
-git clone https://github.com/igor8terekhin/JavaApi_Course.git
+mkdir ~/JavaApiCourse; cd ~/JavaApiCourse; git clone https://github.com/igor8terekhin/JavaApi_Course.git;
 ```
 
 To run tests in Docker:
 
 ```
-docker-compose up --build
+docker-compose up --build;
 ```
 
 To see tests results in Allure report
 
 ```
-allure serve
+allure serve;
 ```
 
 The resulting report should look something like this:
