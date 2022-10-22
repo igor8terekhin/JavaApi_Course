@@ -20,7 +20,7 @@ _Pre-requisites_
 * Install [Docker](https://docs.docker.com/engine/install/)
 * Install [Allure](https://docs.qameta.io/allure-report#_installing_a_commandline) 
 
-Clone repository from GitHub to your local folder:
+Clone repository from GitHub to your local directory:
 
 ```
 mkdir ~/JavaApiCourse; cd ~/JavaApiCourse; git clone https://github.com/igor8terekhin/JavaApi_Course.git;
