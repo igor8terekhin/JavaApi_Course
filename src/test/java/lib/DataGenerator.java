@@ -7,7 +7,9 @@ public class DataGenerator {
 
     public static String getRandomEmail() {
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        return "igorTest" + timestamp + "@example.com";
+        Random rd = new Random();
+        String randomInt = Integer.toString(rd.nextInt(999));
+        return randomInt + "igorTest" + timestamp + "@example.com";
     }
 
     public static Map<String, String> getRegistrationData() {
