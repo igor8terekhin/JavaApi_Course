@@ -1,6 +1,9 @@
 package tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
@@ -12,11 +15,13 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+@Feature("Getting users")
 public class GetUserTest extends BaseTestCase {
     final String getUserUrl = "https://playground.learnqa.ru/api/user/";
     final String loginUrl = "https://playground.learnqa.ru/api/user/login";
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
+    @Severity(SeverityLevel.CRITICAL)
     @Description("Test tries to get user's data while being not authorised")
     @DisplayName("Test get user's data while not authorized")
     @Test

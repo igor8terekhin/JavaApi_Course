@@ -1,6 +1,8 @@
 package tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Flaky;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.Map;
 
+@Feature("Deleting users")
 public class DeleteUserTest extends BaseTestCase {
     final String userUrl = "https://playground.learnqa.ru/api/user/";
     final String loginUrl = "https://playground.learnqa.ru/api/user/login";
@@ -81,6 +84,7 @@ public class DeleteUserTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseUserData, "User not found");
     }
 
+    @Flaky
     @Description("Test tries to delete user while logged in as another user")
     @DisplayName("Test delete user as another user")
     @ParameterizedTest

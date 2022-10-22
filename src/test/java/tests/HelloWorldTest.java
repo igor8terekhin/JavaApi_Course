@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Feature("Very first test")
 public class HelloWorldTest {
 
     @ParameterizedTest

@@ -1,6 +1,9 @@
 package tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -14,7 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Feature("Registering users")
 public class UserRegisterTest extends BaseTestCase {
     final String url = "https://playground.learnqa.ru/api/user/";
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
@@ -36,6 +39,7 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseCreateAuth, "Users with email '" + email + "' already exists");
     }
 
+    @Severity(SeverityLevel.CRITICAL)
     @Description("Test creates new user")
     @DisplayName("Create new user")
     @Test

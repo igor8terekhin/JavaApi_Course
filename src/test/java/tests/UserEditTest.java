@@ -1,6 +1,9 @@
 package tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+@Feature("Editing users")
 public class UserEditTest extends BaseTestCase {
     final String getUserUrl = "https://playground.learnqa.ru/api/user/";
     final String loginUrl = "https://playground.learnqa.ru/api/user/login";
@@ -66,6 +70,7 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
 
+    @Severity(SeverityLevel.CRITICAL)
     @Test
     @Description("Test tires to change user's first name without authentication")
     @DisplayName("Test change first name without auth")

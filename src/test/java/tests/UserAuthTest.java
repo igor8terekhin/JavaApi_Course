@@ -1,8 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -16,9 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Epic("Authorisation cases")
 @Feature("Authorisation")
-
 public class UserAuthTest extends BaseTestCase {
 
     String cookie;
@@ -54,6 +50,7 @@ public class UserAuthTest extends BaseTestCase {
 
     }
 
+    @Severity(SeverityLevel.CRITICAL)
     @Description("Test checks authorization status without sending auth cookie or token")
     @DisplayName("Negative auth user")
     @ParameterizedTest
